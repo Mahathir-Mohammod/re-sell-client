@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import { authClient } from "@/lib/auth-client";
+import { setTokenGetter } from "@/lib/axios";
 
 const AuthContext = createContext(null);
 
@@ -29,7 +30,18 @@ export function AuthProvider({ children }) {
   // { userId, token, exp } — userId lets us drop a previous user's token on switch
   const [jwt, setJwt] = useState(null);
   const inflight = useRef(null);
+  const tokenRef = useRef(null);
   const userId = session?.user?.id;
+  const token = jwt && jwt.userId === userId ? jwt.token : null;
+
+  // axios interceptor reads this on every request; register once
+  useEffect(() => {
+    setTokenGetter(() => tokenRef.current);
+  }, []);
+
+  useEffect(() => {
+    tokenRef.current = token;
+  }, [token]);
 
   const fetchJwt = useCallback(async (uid) => {
     inflight.current ??= (async () => {
@@ -66,13 +78,13 @@ export function AuthProvider({ children }) {
     () => ({
       user: session?.user ?? null,
       role: session?.user?.role ?? null,
-      jwt: jwt && jwt.userId === userId ? jwt.token : null,
+      jwt: token,
       isLoading: isPending,
       isAuthenticated: Boolean(session?.user),
       refreshJwt,
       logout,
     }),
-    [session?.user, jwt, userId, isPending, refreshJwt, logout]
+    [session?.user, isPending, refreshJwt, logout, token]
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;
