@@ -66,6 +66,12 @@ export function Navbar() {
             <div className="h-9 w-20 animate-pulse rounded-xl bg-ink-100 dark:bg-ink-800" />
           ) : user ? (
             <>
+              <Link
+                href="/dashboard"
+                className="hidden rounded-xl border border-ink-200 px-3 py-2 text-sm font-medium hover:bg-ink-100 dark:border-ink-700 dark:hover:bg-ink-800 sm:block"
+              >
+                {role === "admin" ? "Admin" : role === "seller" ? "Seller hub" : "Dashboard"}
+              </Link>
               <button
                 onClick={async () => {
                   await logout();

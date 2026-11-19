@@ -3,6 +3,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Toaster } from "@/components/ui/Toaster";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,6 +36,7 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <Navbar />
             <main className="flex-1">{children}</main>
+            <Toaster />
             <Footer />
           </AuthProvider>
         </QueryProvider>

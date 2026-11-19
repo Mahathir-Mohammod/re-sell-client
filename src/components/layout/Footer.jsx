@@ -10,6 +10,13 @@ const columns = [
     ],
   },
   {
+    title: "Sell",
+    links: [
+      { href: "/dashboard/seller/add-product", label: "List an item" },
+      { href: "/dashboard/seller/my-products", label: "My listings" },
+    ],
+  },
+  {
     title: "Account",
     links: [
       { href: "/login", label: "Sign in" },
