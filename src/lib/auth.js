@@ -71,5 +71,7 @@ export const auth = betterAuth({
   // issuer/audience stay unset on both sides: the signature + exp check is what
   // matters, and a mismatch here is the classic "everything 401s in prod" bug.
   plugins: [jwt()],
+  // Better Auth allows only 3 sign-ups per 10s; the e2e verifier needs more.
+  rateLimit: { enabled: process.env.AUTH_RATE_LIMIT !== "off" },
   trustedOrigins: [process.env.BETTER_AUTH_URL].filter(Boolean),
 });
