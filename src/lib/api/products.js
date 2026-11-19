@@ -31,3 +31,23 @@ export const fetchFeatured = async (limit = 8) =>
 
 export const fetchCategories = async () =>
   (await api.get("/api/categories")).data.data;
+// --- seller endpoints (JWT attached by the axios interceptor) ---
+
+export const fetchMyProducts = async (params) =>
+  unwrap(await api.get("/api/products/mine", { params }));
+
+export const createProduct = async (body) =>
+  (await api.post("/api/products", body)).data.data;
+
+export const updateProduct = async (id, body) =>
+  (await api.patch(`/api/products/${id}`, body)).data.data;
+
+export const deleteProduct = async (id) =>
+  (await api.delete(`/api/products/${id}`)).data.data;
+
+// dataUrl must include the "data:image/...;base64," prefix
+export const uploadImage = async (image, name) =>
+  (await api.post("/api/products/upload", { image, name })).data.data.url;
+
+export const becomeSeller = async () =>
+  (await api.patch("/api/users/become-seller")).data.data;
