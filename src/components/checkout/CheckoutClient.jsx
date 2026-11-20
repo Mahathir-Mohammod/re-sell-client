@@ -65,6 +65,10 @@ function PaymentFields({ amountCents }) {
         <span className="font-semibold text-ink-900 dark:text-white">{formatPrice(amountCents / 100)}</span>
       </div>
 
+      <Button type="submit" size="lg" className="w-full" loading={submitting} disabled={!stripe || !elements}>
+        Pay {formatPrice(amountCents / 100)}
+      </Button>
+
       <p className="text-center text-xs text-ink-400">
         Test mode — use card 4242 4242 4242 4242, any future expiry, any CVC.
       </p>
