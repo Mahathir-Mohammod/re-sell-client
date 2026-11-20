@@ -5,16 +5,22 @@ import {
   ClipboardList,
   LayoutDashboard,
   PackagePlus,
+  Receipt,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // links are added here as each dashboard page ships, so nothing 404s
 const items = {
-  buyer: [{ href: "/dashboard", label: "Overview", icon: LayoutDashboard }],
+  buyer: [
+    { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+    { href: "/dashboard/orders", label: "My orders", icon: ClipboardList },
+    { href: "/dashboard/payments", label: "Payments", icon: Receipt },
+  ],
   seller: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/seller/add-product", label: "Add product", icon: PackagePlus },
     { href: "/dashboard/seller/my-products", label: "My products", icon: ClipboardList },
+    { href: "/dashboard/orders", label: "My orders", icon: Receipt },
   ],
   admin: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
