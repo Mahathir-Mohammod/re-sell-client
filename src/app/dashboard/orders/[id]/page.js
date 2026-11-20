@@ -132,14 +132,24 @@ function OrderDetail({ id }) {
           </section>
 
           {canBuyerCancel(order) && (
-            <Button
-              variant="outline"
-              className="w-full"
-              loading={cancel.isPending}
-              onClick={() => cancel.mutate()}
-            >
-              Cancel this order
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                className="w-full"
+                loading={cancel.isPending}
+                onClick={() => {
+                  if (order.paymentStatus === "paid" && !window.confirm("Cancel and refund this order?")) return;
+                  cancel.mutate();
+                }}
+              >
+                {order.paymentStatus === "paid" ? "Cancel and refund" : "Cancel this order"}
+              </Button>
+              {order.paymentStatus === "paid" && (
+                <p className="text-center text-xs text-ink-400">
+                  The full amount is refunded to your card.
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>
