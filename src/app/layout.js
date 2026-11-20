@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { CartProvider } from "@/providers/CartProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/Toaster";
@@ -34,9 +35,11 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
         <QueryProvider>
           <AuthProvider>
+            <CartProvider>
             <Navbar />
             <main className="flex-1">{children}</main>
             <Toaster />
+            </CartProvider>
             <Footer />
           </AuthProvider>
         </QueryProvider>

@@ -4,6 +4,7 @@ import { Eye, MapPin, ShieldCheck, Star } from "lucide-react";
 import { ImageGallery } from "@/components/products/ImageGallery";
 import { ConditionBadge, Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
+import { AddToCartButton } from "@/components/products/AddToCartButton";
 import { formatPrice } from "@/lib/utils";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -79,9 +80,7 @@ export default async function ProductDetailPage({ params }) {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <ButtonLink href="/login" size="lg" className={product.stock === 0 ? "pointer-events-none opacity-50" : ""}>
-              Add to cart
-            </ButtonLink>
+            <AddToCartButton product={product} />
             <ButtonLink href="/products" variant="outline" size="lg">
               Keep browsing
             </ButtonLink>
