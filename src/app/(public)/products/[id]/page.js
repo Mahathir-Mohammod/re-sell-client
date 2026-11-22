@@ -5,6 +5,7 @@ import { ImageGallery } from "@/components/products/ImageGallery";
 import { ConditionBadge, Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
+import { WishlistButton } from "@/components/products/WishlistButton";
 import { formatPrice } from "@/lib/utils";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -81,6 +82,7 @@ export default async function ProductDetailPage({ params }) {
 
           <div className="mt-6 flex flex-wrap gap-3">
             <AddToCartButton product={product} />
+            <WishlistButton productId={product._id} variant="button" />
             <ButtonLink href="/products" variant="outline" size="lg">
               Keep browsing
             </ButtonLink>

@@ -2,13 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
 import { ConditionBadge } from "@/components/ui/Badge";
+import { WishlistButton } from "@/components/products/WishlistButton";
 import { formatPrice } from "@/lib/utils";
 
 export function ProductCard({ product }) {
   const image = product.images?.[0];
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-ink-800 dark:bg-ink-900">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-ink-800 dark:bg-ink-900">
+      {/* outside the Link so saving never navigates */}
+      <WishlistButton
+        productId={product._id}
+        className="absolute right-3 top-3 z-10"
+      />
+
       <Link href={`/products/${product.slug || product._id}`} className="relative block aspect-[4/3] overflow-hidden bg-ink-100">
         {image ? (
           <Image
