@@ -1,11 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
+  BarChart3,
   ClipboardList,
+  CreditCard,
   LayoutDashboard,
+  Package,
   PackagePlus,
   Receipt,
+  ShieldCheck,
+  Truck,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,12 +26,19 @@ const items = {
   seller: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/seller/add-product", label: "Add product", icon: PackagePlus },
-    { href: "/dashboard/seller/my-products", label: "My products", icon: ClipboardList },
-    { href: "/dashboard/orders", label: "My orders", icon: Receipt },
+    { href: "/dashboard/seller/my-products", label: "My products", icon: Package },
+    { href: "/dashboard/seller/manage-orders", label: "Manage orders", icon: Truck },
+    { href: "/dashboard/seller/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/dashboard/orders", label: "My purchases", icon: ClipboardList },
   ],
   admin: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-    { href: "/dashboard/seller/my-products", label: "My products", icon: ClipboardList },
+    { href: "/dashboard/admin/products", label: "Manage products", icon: ShieldCheck },
+    { href: "/dashboard/admin/users", label: "Manage users", icon: Users },
+    { href: "/dashboard/admin/orders", label: "All orders", icon: ClipboardList },
+    { href: "/dashboard/admin/payments", label: "Payments", icon: CreditCard },
+    { href: "/dashboard/admin/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/dashboard/seller/my-products", label: "My listings", icon: Package },
   ],
 };
 
@@ -40,6 +54,7 @@ export function DashboardSidebar({ role = "buyer" }) {
           <Link
             key={href}
             href={href}
+            aria-current={active ? "page" : undefined}
             className={cn(
               "flex items-center gap-2 whitespace-nowrap rounded-xl px-3 py-2 text-sm font-medium",
               active
