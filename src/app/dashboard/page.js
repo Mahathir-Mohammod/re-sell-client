@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import {
   BarChart3,
   DollarSign,
+  Heart,
   PackagePlus,
   ShieldAlert,
   ShoppingBag,
@@ -16,6 +17,7 @@ import {
 import { useAuth } from "@/providers/AuthProvider";
 import { becomeSeller } from "@/lib/api/products";
 import { fetchMyOrders, fetchMyPayments } from "@/lib/api/orders";
+import { fetchWishlist } from "@/lib/api/wishlist";
 import { fetchSellerStats } from "@/lib/api/seller";
 import { fetchAdminStats } from "@/lib/api/admin";
 import { Button, ButtonLink } from "@/components/ui/Button";
@@ -39,6 +41,12 @@ export default function DashboardOverview() {
   const buyerPayments = useQuery({
     queryKey: ["my-payments", "summary"],
     queryFn: () => fetchMyPayments({ limit: 1 }),
+    enabled: isBuyer,
+  });
+  const buyerWishlist = useQuery({
+    // distinct key: the saved-ids cache (limit 50) and this count must not clash
+    queryKey: ["wishlist", "summary"],
+    queryFn: () => fetchWishlist({ limit: 1 }),
     enabled: isBuyer,
   });
   const sellerStats = useQuery({
@@ -77,13 +85,21 @@ export default function DashboardOverview() {
       </div>
 
       {isBuyer && (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-3">
           <StatCard
             label="Orders"
             value={buyerOrders.data?.meta.total ?? 0}
             hint="all time"
             icon={ShoppingBag}
             loading={buyerOrders.isLoading}
+          />
+          <StatCard
+            label="Wishlist"
+            value={buyerWishlist.data?.meta.total ?? 0}
+            hint="saved items"
+            icon={Heart}
+            tone="amber"
+            loading={buyerWishlist.isLoading}
           />
           <StatCard
             label="Payments"

@@ -6,6 +6,7 @@ import {
   BarChart3,
   ClipboardList,
   CreditCard,
+  Heart,
   LayoutDashboard,
   Package,
   PackagePlus,
@@ -21,6 +22,7 @@ const items = {
   buyer: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/orders", label: "My orders", icon: ClipboardList },
+    { href: "/dashboard/wishlist", label: "Wishlist", icon: Heart },
     { href: "/dashboard/payments", label: "Payments", icon: Receipt },
   ],
   seller: [
@@ -29,6 +31,7 @@ const items = {
     { href: "/dashboard/seller/my-products", label: "My products", icon: Package },
     { href: "/dashboard/seller/manage-orders", label: "Manage orders", icon: Truck },
     { href: "/dashboard/seller/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/dashboard/wishlist", label: "Wishlist", icon: Heart },
     { href: "/dashboard/orders", label: "My purchases", icon: ClipboardList },
   ],
   admin: [
