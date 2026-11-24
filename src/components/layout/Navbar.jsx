@@ -6,6 +6,7 @@ import { Recycle, Search } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { CartButton } from "@/components/layout/CartButton";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -63,6 +64,12 @@ export function Navbar() {
         </form>
 
         <div className="ml-auto flex items-center gap-2 md:ml-0">
+          <div className="hidden sm:block">
+            <ThemeToggle />
+          </div>
+          <div className="sm:hidden">
+            <ThemeToggle compact />
+          </div>
           <CartButton />
           {isLoading ? (
             <div className="h-9 w-20 animate-pulse rounded-xl bg-ink-100 dark:bg-ink-800" />

@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { CartProvider } from "@/providers/CartProvider";
+import { RecentlyViewedProvider } from "@/providers/RecentlyViewedProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/Toaster";
@@ -30,19 +32,24 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
-        <QueryProvider>
-          <AuthProvider>
-            <CartProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Toaster />
-            </CartProvider>
-            <Footer />
-          </AuthProvider>
-        </QueryProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <AuthProvider>
+              <CartProvider>
+                <RecentlyViewedProvider>
+                  <Navbar />
+                  <main className="flex-1">{children}</main>
+                  <Toaster />
+                </RecentlyViewedProvider>
+              </CartProvider>
+              <Footer />
+            </AuthProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
