@@ -2,9 +2,10 @@
 
 import { useDeferredValue, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ShieldBan, ShieldCheck, Trash2, Users } from "lucide-react";
+import { BadgeCheck, ShieldBan, ShieldCheck, Trash2, Users } from "lucide-react";
 import { toast } from "sonner";
 import { deleteAdminUser, fetchAdminUsers, updateAdminUser } from "@/lib/api/admin";
+import { setSellerVerified } from "@/lib/api/reports";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -46,6 +47,16 @@ function AdminUsers() {
       refresh();
     },
     onError: (error) => toast.error(error.response?.data?.message ?? "Could not update the user"),
+  });
+
+  const verify = useMutation({
+    mutationFn: ({ id, verified }) => setSellerVerified(id, verified),
+    onSuccess: (_data, vars) => {
+      toast.success(vars.verified ? "Seller verified" : "Verification removed");
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+    onError: (error) => toast.error(error.response?.data?.message ?? "Could not update verification"),
   });
 
   const remove = useMutation({
@@ -147,9 +158,25 @@ function AdminUsers() {
                     </td>
                     <td className="px-4 py-3">
                       <Badge tone={user.status === "blocked" ? "red" : "brand"}>{user.status ?? "active"}</Badge>
+                      {user.isVerifiedSeller && (
+                        <span className="ml-2 inline-flex items-center gap-1 text-xs text-brand-700 dark:text-brand-300">
+                          <BadgeCheck className="size-3.5" aria-hidden /> verified
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap justify-end gap-1.5">
+                        {!isSelf && (user.role === "seller" || user.role === "admin") && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            loading={verify.isPending && verify.variables?.id === user._id}
+                            onClick={() => verify.mutate({ id: user._id, verified: !user.isVerifiedSeller })}
+                          >
+                            <BadgeCheck className="size-3.5" aria-hidden />
+                            {user.isVerifiedSeller ? "Unverify" : "Verify"}
+                          </Button>
+                        )}
                         {!isSelf && (
                           <Button
                             size="sm"

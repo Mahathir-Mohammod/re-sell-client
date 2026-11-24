@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import {
   BarChart3,
   DollarSign,
+  Flag,
   Heart,
   PackagePlus,
   ShieldAlert,
@@ -158,7 +159,7 @@ export default function DashboardOverview() {
       )}
 
       {isAdmin && (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
           <StatCard
             label="Users"
             value={adminStats.data?.users.total ?? 0}
@@ -179,6 +180,14 @@ export default function DashboardOverview() {
             hint="moderation queue"
             icon={ShieldAlert}
             tone="amber"
+            loading={adminStats.isLoading}
+          />
+          <StatCard
+            label="Open reports"
+            value={adminStats.data?.reports.open ?? 0}
+            hint="flagged listings"
+            icon={Flag}
+            tone="red"
             loading={adminStats.isLoading}
           />
           <StatCard
