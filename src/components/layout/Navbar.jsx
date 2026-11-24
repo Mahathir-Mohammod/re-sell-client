@@ -27,12 +27,12 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink-200/70 bg-white/85 backdrop-blur dark:border-ink-800 dark:bg-ink-900/80">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="grid size-9 place-items-center rounded-xl bg-brand-600 text-white">
             <Recycle className="size-5" aria-hidden />
           </span>
-          <span className="text-lg">ReSell Hub</span>
+          <span className="hidden text-lg sm:inline">ReSell Hub</span>
         </Link>
 
         <nav className="hidden items-center gap-1 sm:flex" aria-label="Main">
@@ -95,13 +95,13 @@ export function Navbar() {
             <>
               <Link
                 href="/login"
-                className="rounded-xl px-3 py-2 text-sm font-medium text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800"
+                className="hidden rounded-xl px-3 py-2 text-sm font-medium text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800 sm:block"
               >
                 Sign in
               </Link>
               <Link
                 href="/register"
-                className="rounded-xl bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+                className="rounded-xl bg-brand-600 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-700 sm:px-3.5"
               >
                 Get started
               </Link>

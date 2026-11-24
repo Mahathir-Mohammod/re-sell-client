@@ -82,7 +82,7 @@ function AdminPayments() {
           description="Payments recorded by Stripe (webhook or confirm fallback) land here."
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-ink-200 dark:border-ink-800">
+        <div className="hidden overflow-x-auto rounded-2xl border border-ink-200 md:block dark:border-ink-800">
           <table className="w-full min-w-[760px] text-sm">
             <thead className="bg-ink-50 text-left text-xs uppercase tracking-wide text-ink-500 dark:bg-ink-900">
               <tr>
@@ -112,6 +112,31 @@ function AdminPayments() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {!isLoading && payments.length > 0 && (
+        <ul className="space-y-3 md:hidden">
+          {payments.map((payment) => (
+            <li key={payment._id} className="rounded-2xl border border-ink-200 p-4 dark:border-ink-800">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-mono text-xs break-all">{payment.transactionId}</p>
+                  <p className="mt-1 truncate font-mono text-[11px] text-ink-400">{payment.buyerId ?? "—"}</p>
+                  <p className="mt-1 text-xs text-ink-500">{formatDate(payment.createdAt)}</p>
+                </div>
+                <div className="shrink-0 text-right">
+                  <p className="font-semibold tabular-nums">{formatPrice(payment.amount)}</p>
+                  {payment.refundedAmount ? (
+                    <p className="text-xs text-ink-500">-{formatPrice(payment.refundedAmount)}</p>
+                  ) : null}
+                </div>
+              </div>
+              <Badge tone={tone(payment.status)} className="mt-2">
+                {payment.status}
+              </Badge>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

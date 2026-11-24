@@ -115,7 +115,7 @@ function AdminUsers() {
       ) : items.length === 0 ? (
         <EmptyState icon={Users} title="No matching users" description="Try a different search or filter." />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-ink-200 dark:border-ink-800">
+        <div className="hidden overflow-x-auto rounded-2xl border border-ink-200 md:block dark:border-ink-800">
           <table className="w-full min-w-[820px] text-sm">
             <thead className="bg-ink-50 text-left text-xs uppercase tracking-wide text-ink-500 dark:bg-ink-900">
               <tr>
@@ -233,6 +233,53 @@ function AdminUsers() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {!isLoading && items.length > 0 && (
+        <ul className="space-y-3 md:hidden">
+          {items.map((user) => {
+            const self = user._id === me?.id;
+            return (
+              <li key={user._id} className="rounded-2xl border border-ink-200 p-4 dark:border-ink-800">
+                <p className="font-medium">
+                  {user.name} {self && <span className="text-xs text-ink-400">(you)</span>}
+                </p>
+                <p className="truncate text-xs text-ink-500">{user.email}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <Badge tone={user.role === "admin" ? "brand" : "neutral"}>{user.role ?? "buyer"}</Badge>
+                  <Badge tone={user.status === "blocked" ? "red" : "brand"}>{user.status ?? "active"}</Badge>
+                  {user.isVerifiedSeller && <Badge tone="brand">verified</Badge>}
+                </div>
+                {!self && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      loading={update.isPending && update.variables?.id === user._id}
+                      onClick={() =>
+                        update.mutate({
+                          id: user._id,
+                          patch: { status: user.status === "blocked" ? "active" : "blocked" },
+                        })
+                      }
+                    >
+                      {user.status === "blocked" ? "Unblock" : "Block"}
+                    </Button>
+                    {deleting === user._id ? (
+                      <Button size="sm" variant="danger" loading={remove.isPending} onClick={() => remove.mutate(user._id)}>
+                        Confirm delete
+                      </Button>
+                    ) : (
+                      <Button size="sm" variant="ghost" onClick={() => setDeleting(user._id)}>
+                        <Trash2 className="size-3.5" aria-hidden /> Delete
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       )}
     </div>
   );

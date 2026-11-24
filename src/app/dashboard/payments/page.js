@@ -40,7 +40,7 @@ function PaymentHistory() {
           action={<ButtonLink href="/products" className="mt-4">Browse products</ButtonLink>}
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-ink-200 dark:border-ink-800">
+        <div className="hidden overflow-x-auto rounded-2xl border border-ink-200 md:block dark:border-ink-800">
           <table className="w-full min-w-[640px] text-sm">
             <thead className="bg-ink-50 text-left text-xs uppercase tracking-wide text-ink-500 dark:bg-ink-900">
               <tr>
@@ -71,6 +71,31 @@ function PaymentHistory() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {!isLoading && payments.length > 0 && (
+        <ul className="space-y-3 md:hidden">
+          {payments.map((payment) => (
+            <li key={payment._id} className="rounded-2xl border border-ink-200 p-4 dark:border-ink-800">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-mono text-xs break-all">{payment.transactionId}</p>
+                  <p className="mt-1 text-xs text-ink-500">
+                    {formatDate(payment.createdAt)} · {payment.method}
+                    {payment.last4 ? ` ···· ${payment.last4}` : ""}
+                  </p>
+                </div>
+                <span className="shrink-0 font-semibold tabular-nums">{formatPrice(payment.amount)}</span>
+              </div>
+              <Badge
+                tone={payment.status === "paid" ? "brand" : payment.status === "failed" ? "red" : "amber"}
+                className="mt-2"
+              >
+                {payment.status}
+              </Badge>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
