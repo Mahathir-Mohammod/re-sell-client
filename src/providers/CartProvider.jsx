@@ -4,7 +4,6 @@ import { createContext, useCallback, useContext, useMemo, useSyncExternalStore }
 
 const CartContext = createContext(null);
 const STORAGE_KEY = "resell-cart";
-
 // localStorage is an external store, so React reads it through useSyncExternalStore:
 // no hydration mismatch, no setState-in-effect, and free cross-tab sync.
 const EMPTY = [];
@@ -35,6 +34,13 @@ function getServerSnapshot() {
   return EMPTY;
 }
 
+// hydration never changes after it happens, so there is nothing to subscribe to
+const noopSubscribe = () => () => {};
+
+// React only calls this getter on the client, so "it ran" means "we are hydrated".
+const trueOnClient = () => true;
+const falseOnServer = () => false;
+
 function subscribe(onChange) {
   listeners.add(onChange);
   window.addEventListener("storage", onChange); // changes from another tab
@@ -51,6 +57,11 @@ function writeItems(items) {
 
 export function CartProvider({ children }) {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  // localStorage is invisible to the server, so consumers must not render saved items
+  // before hydration. Without this the cart page could never leave its skeleton:
+  // `hydrated` stayed undefined because nothing ever set it.
+  const hydrated = useSyncExternalStore(noopSubscribe, trueOnClient, falseOnServer);
 
   const update = useCallback((next) => writeItems(next(items)), [items]);
 
@@ -107,6 +118,7 @@ export function CartProvider({ children }) {
   const value = useMemo(
     () => ({
       items,
+      hydrated,
       count: items.reduce((sum, i) => sum + i.quantity, 0),
       subtotal: items.reduce((sum, i) => sum + i.price * i.quantity, 0),
       addItem,
@@ -114,7 +126,7 @@ export function CartProvider({ children }) {
       removeItem,
       clearCart,
     }),
-    [items, addItem, setQuantity, removeItem, clearCart]
+    [items, hydrated, addItem, setQuantity, removeItem, clearCart]
   );
 
   return <CartContext value={value}>{children}</CartContext>;
