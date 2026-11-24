@@ -6,6 +6,10 @@ import { ConditionBadge, Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
 import { WishlistButton } from "@/components/products/WishlistButton";
+import { RecentlyViewed } from "@/components/products/RecentlyViewed";
+import { RecentlyViewedTracker } from "@/components/products/RecentlyViewedTracker";
+import { ReportButton } from "@/components/reports/ReportButton";
+import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
 import { formatPrice } from "@/lib/utils";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -36,6 +40,7 @@ export default async function ProductDetailPage({ params }) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <RecentlyViewedTracker product={product} />
       <nav className="mb-6 text-sm text-ink-500" aria-label="Breadcrumb">
         <Link href="/" className="hover:text-brand-700">Home</Link>
         <span className="mx-2">/</span>
@@ -98,7 +103,11 @@ export default async function ProductDetailPage({ params }) {
                 <p className="font-medium">{product.sellerInfo?.name}</p>
                 <p className="text-sm text-ink-500">{product.sellerInfo?.email}</p>
               </div>
-              <ShieldCheck className="ml-auto size-5 text-brand-600" aria-label="Seller verified" />
+              {product.sellerInfo?.isVerified ? (
+                <VerifiedBadge className="ml-auto" />
+              ) : (
+                <ShieldCheck className="ml-auto size-5 text-ink-300" aria-label="Seller not verified" />
+              )}
             </div>
           </section>
 
@@ -108,8 +117,14 @@ export default async function ProductDetailPage({ params }) {
               {product.description}
             </p>
           </section>
+
+          <div className="mt-8 border-t border-ink-100 pt-4 dark:border-ink-800">
+            <ReportButton productId={product._id} productTitle={product.title} />
+          </div>
         </div>
       </div>
+
+      <RecentlyViewed excludeId={product._id} className="mt-12" />
     </div>
   );
 }

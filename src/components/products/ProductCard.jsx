@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
 import { ConditionBadge } from "@/components/ui/Badge";
 import { WishlistButton } from "@/components/products/WishlistButton";
+import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
 import { formatPrice } from "@/lib/utils";
 
 export function ProductCard({ product }) {
@@ -49,6 +50,7 @@ export function ProductCard({ product }) {
               <span className="text-ink-400">({product.ratingCount})</span>
             </span>
           )}
+          {product.sellerInfo?.isVerified && <VerifiedBadge label="Verified" />}
           {product.location && (
             <span className="inline-flex min-w-0 items-center gap-1">
               <MapPin className="size-3.5 shrink-0" aria-hidden />
