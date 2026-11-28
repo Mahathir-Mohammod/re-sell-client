@@ -2,20 +2,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Hero } from "@/components/home/Hero";
+import { MarketplaceStats, SuccessStories, Sustainability } from "@/components/home/Sections";
+import { ClosingCta, TrustedSellers } from "@/components/home/TrustedSellers";
 import { ProductGrid } from "@/components/products/ProductGrid";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
-async function getJson(path) {
-  const res = await fetch(`${API}${path}`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`${path} responded ${res.status}`);
-  return (await res.json()).data;
+async function getJson(path, fallback = null) {
+  try {
+    const res = await fetch(`${API}${path}`, { cache: "no-store" });
+    if (!res.ok) return fallback;
+    return (await res.json()).data;
+  } catch {
+    // a cold API must not take the whole home page down
+    return fallback;
+  }
 }
 
 export default async function HomePage() {
-  const [featured, categories] = await Promise.all([
-    getJson("/api/products/featured?limit=8"),
-    getJson("/api/categories"),
+  const [featured, categories, stats, sellers] = await Promise.all([
+    getJson("/api/products/featured?limit=8", []),
+    getJson("/api/categories", []),
+    getJson("/api/stats/marketplace", null),
+    getJson("/api/stats/sellers/top?limit=6", []),
   ]);
 
   return (
@@ -81,6 +90,12 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <MarketplaceStats stats={stats} />
+      <TrustedSellers sellers={sellers} />
+      <SuccessStories />
+      <Sustainability stats={stats} />
+      <ClosingCta />
     </>
   );
 }
