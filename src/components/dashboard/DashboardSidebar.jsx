@@ -8,6 +8,7 @@ import {
   CreditCard,
   Flag,
   Heart,
+  UserRound,
   LayoutDashboard,
   Package,
   PackagePlus,
@@ -25,6 +26,7 @@ const items = {
     { href: "/dashboard/orders", label: "My orders", icon: ClipboardList },
     { href: "/dashboard/wishlist", label: "Wishlist", icon: Heart },
     { href: "/dashboard/payments", label: "Payments", icon: Receipt },
+    { href: "/dashboard/profile", label: "Profile", icon: UserRound },
   ],
   seller: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -34,6 +36,7 @@ const items = {
     { href: "/dashboard/seller/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/dashboard/wishlist", label: "Wishlist", icon: Heart },
     { href: "/dashboard/orders", label: "My purchases", icon: ClipboardList },
+    { href: "/dashboard/profile", label: "Profile", icon: UserRound },
   ],
   admin: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -44,6 +47,7 @@ const items = {
     { href: "/dashboard/admin/reports", label: "Reports", icon: Flag },
     { href: "/dashboard/admin/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/dashboard/seller/my-products", label: "My listings", icon: Package },
+    { href: "/dashboard/profile", label: "Profile", icon: UserRound },
   ],
 };
 
