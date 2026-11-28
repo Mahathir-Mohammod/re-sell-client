@@ -9,10 +9,20 @@ import { WishlistButton } from "@/components/products/WishlistButton";
 import { RecentlyViewed } from "@/components/products/RecentlyViewed";
 import { RecentlyViewedTracker } from "@/components/products/RecentlyViewedTracker";
 import { ReportButton } from "@/components/reports/ReportButton";
+import { ReviewForm, ReviewList } from "@/components/reviews/Reviews";
 import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
 import { formatPrice } from "@/lib/utils";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
+
+async function getReviews(id) {
+  try {
+    const res = await fetch(`${API}/api/reviews/product/${encodeURIComponent(id)}`, { cache: "no-store" });
+    return res.ok ? (await res.json()).data : [];
+  } catch {
+    return [];
+  }
+}
 
 async function getProduct(id) {
   const res = await fetch(`${API}/api/products/${encodeURIComponent(id)}`, {
@@ -37,6 +47,7 @@ export default async function ProductDetailPage({ params }) {
   const { id } = await params;
   const product = await getProduct(id);
   if (!product) notFound();
+  const reviews = await getReviews(id);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -100,7 +111,15 @@ export default async function ProductDetailPage({ params }) {
                 {product.sellerInfo?.name?.slice(0, 1) ?? "?"}
               </span>
               <div>
-                <p className="font-medium">{product.sellerInfo?.name}</p>
+                <p className="font-medium">
+                  {product.sellerInfo?.userId ? (
+                    <Link href={`/sellers/${product.sellerInfo.userId}`} className="hover:text-brand-700">
+                      {product.sellerInfo.name}
+                    </Link>
+                  ) : (
+                    product.sellerInfo?.name
+                  )}
+                </p>
                 <p className="text-sm text-ink-500">{product.sellerInfo?.email}</p>
               </div>
               {product.sellerInfo?.isVerified ? (
@@ -116,6 +135,18 @@ export default async function ProductDetailPage({ params }) {
             <p className="mt-2 whitespace-pre-line leading-relaxed text-ink-700 dark:text-ink-200">
               {product.description}
             </p>
+          </section>
+
+          <section className="mt-8" aria-labelledby="reviews-heading">
+            <div className="flex items-center justify-between gap-3">
+              <h2 id="reviews-heading" className="text-sm font-semibold uppercase tracking-wide text-ink-500">
+                Reviews {reviews.length > 0 && <span className="text-ink-400">({reviews.length})</span>}
+              </h2>
+            </div>
+            <div className="mt-3 space-y-3">
+              <ReviewForm productId={product._id} />
+              <ReviewList reviews={reviews} />
+            </div>
           </section>
 
           <div className="mt-8 border-t border-ink-100 pt-4 dark:border-ink-800">
