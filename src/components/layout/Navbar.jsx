@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Recycle, Search } from "lucide-react";
+import { Menu, Recycle, Search, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { CartButton } from "@/components/layout/CartButton";
@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/products", label: "Browse" },
   { href: "/categories", label: "Categories" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function Navbar() {
@@ -19,9 +21,11 @@ export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [q, setQ] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const onSearch = (e) => {
     e.preventDefault();
+    setMenuOpen(false);
     router.push(q.trim() ? `/products?search=${encodeURIComponent(q.trim())}` : "/products");
   };
 
@@ -64,6 +68,16 @@ export function Navbar() {
         </form>
 
         <div className="ml-auto flex items-center gap-2 md:ml-0">
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            className="grid size-9 place-items-center rounded-xl text-ink-600 hover:bg-ink-100 sm:hidden dark:text-ink-300 dark:hover:bg-ink-800"
+          >
+            {menuOpen ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
+          </button>
           <div className="hidden sm:block">
             <ThemeToggle />
           </div>
@@ -109,6 +123,48 @@ export function Navbar() {
           )}
         </div>
       </div>
+
+      {menuOpen && (
+        <div id="mobile-menu" className="border-t border-ink-200 bg-white px-3 py-3 sm:hidden dark:border-ink-800 dark:bg-ink-900">
+          <form onSubmit={onSearch} className="mb-2">
+            <label className="relative block">
+              <span className="sr-only">Search products</span>
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-400" aria-hidden />
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search products…"
+                className="w-full rounded-xl border border-ink-200 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-ink-700 dark:bg-ink-800"
+              />
+            </label>
+          </form>
+
+          <nav aria-label="Mobile" className="flex flex-col">
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={() => setMenuOpen(false)}
+                className={cn(
+                  "rounded-lg px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-100 dark:text-ink-200 dark:hover:bg-ink-800",
+                  pathname.startsWith(l.href) && "bg-ink-100 dark:bg-ink-800"
+                )}
+              >
+                {l.label}
+              </Link>
+            ))}
+            {!user && (
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="mt-1 rounded-lg bg-brand-600 px-3 py-2.5 text-center text-sm font-semibold text-white"
+              >
+                Sign in
+              </Link>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
